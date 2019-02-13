@@ -7,10 +7,13 @@ ENV TIMEZONE America/La_Paz
 RUN rm -f /etc/localtime && \
     ln -s /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 
+RUN yum install -y epel-release yum-utils 
+RUN yum install -y http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 RUN yum-config-manager --enable remi-php71
-RUN yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo 
-# httpd install
+RUN yum -y update
+RUN yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo php-mbstring php-xml php-zip 
 
+# httpd install
 RUN yum install -y httpd
 
 # Clean up, reduces container size
@@ -25,7 +28,7 @@ RUN groupmod -g 1000 apache
 RUN chown -R apache:apache /app
 
 # httpd conf
-COPY conf.d /etc/httpd/conf.d
+COPY conf.d/ /etc/httpd/conf.d/
 
 # composer
 RUN curl -sS https://getcomposer.org/installer | php && \
