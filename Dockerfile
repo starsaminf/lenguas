@@ -1,4 +1,4 @@
-FROM centos:6.7
+FROM centos:7
 
 MAINTAINER Samuel Loza "starsaminf@gmail.com"
 
@@ -7,35 +7,8 @@ ENV TIMEZONE America/La_Paz
 RUN rm -f /etc/localtime && \
     ln -s /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
 
-# Additional Repos
-
-RUN yum -y install http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm \
-    http://rpms.famillecollet.com/enterprise/remi-release-6.rpm \
-    yum-utils wget unzip && \
-    yum-config-manager --enable remi
-
-# php install
-RUN yum install -y \
-  php70W \
-  php70W-devel \
-  php70W-mysql \
-  php70W-common \
-  php70W-mbstring \
-  php70W-cli \
-  php70W-pear \
-  php70W-mcrypt \
-  php70W-process \
-  php70W-soap \
-  php70W-gd  \
-  php70W-opcache  \
-  php70W-pdo  \
-  php70W-pear \
-  php70W-pecl-apcu \
-  php70W-pecl-memcache \
-  php70W-tidy \
-  php70W-xml \
-  php70W-xmlrpc
-
+RUN yum-config-manager --enable remi-php71
+RUN yum install -y php php-mcrypt php-cli php-gd php-curl php-mysql php-ldap php-zip php-fileinfo 
 # httpd install
 
 RUN yum install -y httpd
@@ -67,3 +40,4 @@ EXPOSE 80
 
 WORKDIR /app
 CMD ["/start-httpd.sh"]
+
